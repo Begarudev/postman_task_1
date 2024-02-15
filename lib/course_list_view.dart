@@ -1,72 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:postman_task_1/course_list_item.dart';
-import 'package:postman_task_1/model/course.dart';
 import 'package:postman_task_1/riverpod.dart';
 
-class CourseListView extends ConsumerStatefulWidget {
-  const CourseListView(
-    this._courseList, {
+import 'model/course.dart';
+
+class CourseListView extends ConsumerWidget {
+  const CourseListView({
     Key? key,
   }) : super(key: key);
 
-  final List<CourseElement> _courseList;
-
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CourseListViewState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final courses = ref.watch(courseProvider);
+    return courses.when(
+        data: (data) {
+          return ScrollableListView(data: data);
+        },
+        error: (error, stackTrace) => Center(child: Text('Error: $error')),
+        loading: () => const Center(child: CircularProgressIndicator()));
+  }
 }
 
-class _CourseListViewState extends ConsumerState<CourseListView> {
-  late ScrollController _scrollController;
+class ScrollableListView extends ConsumerStatefulWidget {
+  const ScrollableListView({
+    super.key,
+    required this.data,
+  });
+
+  final Course data;
 
   @override
-  void initState() {
-    super.initState();
-    _scrollController = ScrollController()..addListener(_scrollListener);
-    _loadData();
-  }
+  ConsumerState<ScrollableListView> createState() => _ScrollableListViewState();
+}
 
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _scrollListener() {
-    if (_scrollController.offset >=
-            _scrollController.position.maxScrollExtent &&
-        !_scrollController.position.outOfRange) {
-      _loadData();
-    }
-  }
-
-  void _loadData() async {
-    try {
-      final course = await ref.read(courseProvider.future);
-      setState(() {
-        widget._courseList.addAll(course.courses);
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error loading more data: $e'),
-        ),
-      );
-    }
-  }
-
+class _ScrollableListViewState extends ConsumerState<ScrollableListView> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      controller: _scrollController,
-      itemCount: widget._courseList.length,
-      itemBuilder: (context, index) {
-        return CourseListItem(
-          courseList: widget._courseList,
-          index: index,
-        );
-      },
+    final textInput = ref.watch(filterTextProvider);
+    final List<CourseElement> courses;
+    final departmentSelected = ref.watch(departmentChoiceProvider);
+    final yearSelected = ref.watch(yearChoiceProvider);
+
+    courses = widget.data.courses.where((element) {
+      if (yearSelected.isNotEmpty && element.year != yearSelected) {
+        return false;
+      }
+      if (departmentSelected.isNotEmpty &&
+          element.department.name != departmentSelected) {
+        return false;
+      }
+      if (textInput.isNotEmpty &&
+          !(element.courseName.toLowerCase().contains(textInput) ||
+              element.courseCode.toLowerCase().contains(textInput))) {
+        return false;
+      }
+      return true;
+    }).toList();
+
+    return Expanded(
+      child: ListView.builder(
+        itemCount: courses.length,
+        itemBuilder: (context, index) {
+          return CourseListItem(
+            courseList: courses,
+            index: index,
+          );
+        },
+      ),
     );
   }
 }

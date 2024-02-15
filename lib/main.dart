@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:postman_task_1/course_list_view.dart';
+import 'package:postman_task_1/model/course.dart';
 import 'package:postman_task_1/riverpod.dart';
+import 'package:postman_task_1/widgets/drop_down_menu.dart';
 
-import 'model/course.dart';
+import 'search_field.dart';
 //
 // void main() => runApp(
 //       DevicePreview(
@@ -27,7 +28,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -40,95 +40,58 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends ConsumerWidget {
   const MyHomePage({super.key});
 
-  // late Future<Course> futureCourse;
-
-  // late List<CourseElement> filteredList;
-
   @override
   Widget build(BuildContext context, ref) {
-    final list
-    void Function(String) onChanged = ;
-    final AsyncValue<Course> course = ref.watch(courseProvider);
+    final course = ref.watch(courseProvider).whenData((value) => value);
+    List yearList = [
+      '1st',
+      '2nd',
+      '2ndt',
+      '3rd',
+      '4th',
+    ];
+    List<String> departmentList = Department.values.map((e) => e.name).toList();
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Stack(
+      body: Container(
+        decoration: const BoxDecoration(
+            color: Color(0xff001F3F),
+            image: DecorationImage(
+                fit: BoxFit.fitWidth,
+                image: AssetImage("assets/background_image.png"))),
         alignment: Alignment.center,
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-                color: Color(0xff001F3F),
-                image: DecorationImage(
-                    fit: BoxFit.fitWidth,
-                    image: AssetImage("assets/background_image.png"))),
-            alignment: Alignment.center,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.038,
-                    vertical: 50),
-                child: Column(
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 8,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        decoration: ShapeDecoration(
-                            color: const Color.fromRGBO(65, 105, 225, 1),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18))),
-                        child: SearchField(
-                            courses: , onChanged: onChanged,),
-                      ),
-                    ),
-                    switch (course) {
-                      AsyncData(:final value) => CourseListView(value.courses),
-                      AsyncError() =>
-                        const Text('Oops, something unexpected happened'),
-                      _ => const CircularProgressIndicator(),
-                    }
-                  ],
-                ),
+        padding: EdgeInsets.only(
+            right: MediaQuery.of(context).size.width * 0.038,
+            left: MediaQuery.of(context).size.width * 0.038,
+            top: 50),
+        child: Column(
+          children: [
+            const SearchField(),
+            Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
+              child: Row(
+                children: [
+                  DropDownMenu(
+                    list: departmentList,
+                    hintText: "SelectDepartment",
+                    choiceProvider: departmentChoiceProvider,
+                  ),
+                  DropDownMenu(
+                    list: yearList,
+                    hintText: "Select Year",
+                    choiceProvider: yearChoiceProvider,
+                  )
+                ],
               ),
             ),
-          ),
-          // SvgPicture.asset(
-          //   "assets/group_background.svg",
-          //   width: MediaQuery.of(context).size.width,
-          // ),
-        ],
+            switch (course) {
+              AsyncData() => const CourseListView(),
+              AsyncError() => const Text('Oops, something unexpected happened'),
+              _ => const CircularProgressIndicator(),
+            }
+          ],
+        ),
       ),
-    );
-  }
-}
-
-
-
-final filterTextProvider = StateProvider<String>((ref) => '');
-
-class SearchField extends ConsumerWidget {
-  const SearchField({required this.onChanged,
-    required this.courses,
-    super.key,
-  });
-
-  final List<CourseElement> courses;
-  final void Function(String) onChanged;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return TextField(
-      onChanged: onChanged,
-      style:
-          GoogleFonts.poppins(color: Colors.white, fontSize: 13, height: 1.3),
-      cursorColor: Colors.white,
-      cursorOpacityAnimates: true,
-      decoration: InputDecoration(
-          disabledBorder: InputBorder.none,
-          border: InputBorder.none,
-          hintText: "Search ...",
-          hintStyle:
-              GoogleFonts.poppins(color: Colors.white70, fontSize: 12.06)),
     );
   }
 }
