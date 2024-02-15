@@ -24,61 +24,63 @@ class _CustomDropDownMenuState extends ConsumerState<DropDownMenu> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: AspectRatio(
-        aspectRatio: 5,
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 2),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          decoration: ShapeDecoration(
-              color: const Color.fromRGBO(65, 105, 225, 1),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18))),
-          child: DropdownButton(
-            value: dropDownValue,
-            style: GoogleFonts.poppins(color: Colors.white),
-            dropdownColor: const Color.fromRGBO(65, 105, 225, 1),
-            borderRadius: BorderRadius.circular(18),
-            hint: Text(
-              widget.hintText,
-              style: GoogleFonts.lato(color: Colors.white),
-            ),
-            icon: const Expanded(
-              child: Icon(
-                Icons.keyboard_arrow_down_rounded,
-                color: Colors.white,
-              ),
-            ),
-            underline: const SizedBox(),
-            items: [
-              ...widget.list.map<DropdownMenuItem<String>>((value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              if (dropDownValue != null)
-                DropdownMenuItem<String>(
-                  value: '',
-                  child: const Text(
-                    "Clear Selection",
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  onTap: () {
-                    setState(() {
-                      dropDownValue = '';
-                    });
-                  },
-                ),
-            ],
-            onChanged: (value) {
-              setState(() {
-                dropDownValue = value;
-                ref
-                    .watch(widget.choiceProvider.notifier)
-                    .update((state) => value!);
-              });
-            },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 2),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+        ),
+        decoration: ShapeDecoration(
+            color: const Color.fromRGBO(65, 105, 225, 1),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18))),
+        child: DropdownButton(
+          iconSize: 20,
+          isExpanded: true,
+          value: dropDownValue,
+          style: GoogleFonts.poppins(color: Colors.white),
+          dropdownColor: const Color.fromRGBO(65, 105, 225, 1),
+          borderRadius: BorderRadius.circular(18),
+          hint: Text(
+            overflow: TextOverflow.fade,
+            widget.hintText,
+            style: GoogleFonts.lato(color: Colors.white),
           ),
+          icon: const Expanded(
+            child: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: Colors.white,
+            ),
+          ),
+          underline: const SizedBox(),
+          items: [
+            ...widget.list.map<DropdownMenuItem<String>>((value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            if (dropDownValue != null)
+              DropdownMenuItem<String>(
+                value: '',
+                child: const Text(
+                  "Clear Selection",
+                  style: TextStyle(color: Colors.red),
+                ),
+                onTap: () {
+                  setState(() {
+                    dropDownValue = '';
+                  });
+                },
+              ),
+          ],
+          onChanged: (value) {
+            setState(() {
+              dropDownValue = value;
+              ref
+                  .watch(widget.choiceProvider.notifier)
+                  .update((state) => value!);
+            });
+          },
         ),
       ),
     );

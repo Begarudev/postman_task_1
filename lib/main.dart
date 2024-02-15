@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:postman_task_1/course_list_view.dart';
@@ -6,20 +8,21 @@ import 'package:postman_task_1/riverpod.dart';
 import 'package:postman_task_1/widgets/drop_down_menu.dart';
 
 import 'search_field.dart';
-//
-// void main() => runApp(
-//       DevicePreview(
-//         // isToolbarVisible: false,
-//         backgroundColor: Colors.black,
-//
-//         enabled: !kReleaseMode,
-//         builder: (context) => const MyApp(), // Wrap your app
-//       ),
-//     );
 
-void main() {
-  runApp(const ProviderScope(child: MyApp()));
-}
+void main() => runApp(
+      DevicePreview(
+        // isToolbarVisible: false,
+        backgroundColor: Colors.black,
+
+        enabled: !kReleaseMode,
+        builder: (context) =>
+            const ProviderScope(child: MyApp()), // Wrap your app
+      ),
+    );
+
+// void main() {
+//   runApp(const ProviderScope(child: MyApp()));
+// }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -73,7 +76,7 @@ class MyHomePage extends ConsumerWidget {
                 children: [
                   DropDownMenu(
                     list: departmentList,
-                    hintText: "SelectDepartment",
+                    hintText: "Select Department",
                     choiceProvider: departmentChoiceProvider,
                   ),
                   DropDownMenu(
