@@ -57,7 +57,7 @@ class _CustomDropDownMenuState extends ConsumerState<DropDownMenu> {
             ...widget.list.map<DropdownMenuItem<String>>((value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Text(value, softWrap: false),
               );
             }).toList(),
             if (dropDownValue != null)
