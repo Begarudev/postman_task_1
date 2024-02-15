@@ -42,6 +42,7 @@ class _CustomDropDownMenuState extends ConsumerState<DropDownMenu> {
           borderRadius: BorderRadius.circular(18),
           hint: Text(
             overflow: TextOverflow.fade,
+            softWrap: false,
             widget.hintText,
             style: GoogleFonts.lato(color: Colors.white),
           ),

@@ -1,6 +1,5 @@
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:postman_task_1/course_list_view.dart';
 import 'package:postman_task_1/model/course.dart';
@@ -9,20 +8,27 @@ import 'package:postman_task_1/widgets/drop_down_menu.dart';
 
 import 'search_field.dart';
 
-void main() => runApp(
-      DevicePreview(
-        // isToolbarVisible: false,
-        backgroundColor: Colors.black,
+// void main() => runApp(
+//       DevicePreview(
+//         // isToolbarVisible: false,
+//         backgroundColor: Colors.black,
+//
+//         enabled: !kReleaseMode,
+//         builder: (context) {
+//           WidgetsFlutterBinding.ensureInitialized();
+//           SystemChrome.setPreferredOrientations(
+//               [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+//           return const ProviderScope(child: MyApp());
+//         }, // Wrap your app
+//       ),
+//     );
 
-        enabled: !kReleaseMode,
-        builder: (context) =>
-            const ProviderScope(child: MyApp()), // Wrap your app
-      ),
-    );
-
-// void main() {
-//   runApp(const ProviderScope(child: MyApp()));
-// }
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  runApp(const ProviderScope(child: MyApp()));
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
