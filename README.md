@@ -1,16 +1,9 @@
-# postman_task_1
+# Search Courses
 
-A new Flutter project.
+This project was made for recruitment task of Postman-Lab Bits Pilani.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+In this project , you can filter out courses on basis of department and year, which has been interviewed with search 🔍 feature. That is this app. allows you to search courses from the complete list of courses or the filtered list created by selected options from drop-down menu.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Data about Courses have been fetched using http request from an API provided by the recruiters 
